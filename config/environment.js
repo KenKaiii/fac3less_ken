@@ -23,9 +23,16 @@ exports.environment = {
 };
 // Validate required environment variables
 function validateEnvironment() {
-    const required = [];
-    const missing = required.filter((key) => !exports.environment[key]);
+    const missing = [];
+    // Check current process.env values, not cached environment object
+    if (!process.env.REPLICATE_API_TOKEN) {
+        missing.push('REPLICATE_API_TOKEN');
+    }
+    if (!process.env.OPENROUTER_API_KEY) {
+        missing.push('OPENROUTER_API_KEY');
+    }
     if (missing.length > 0) {
-        throw new Error(`Missing required environment variables: ${missing.join(", ")}`);
+        throw new Error(`Missing required environment variables: ${missing.join(", ")}. ` +
+            `These API keys are required for video generation workflows to function properly.`);
     }
 }
